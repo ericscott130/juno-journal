@@ -29,7 +29,13 @@ type DailyViewRouteProp = RouteProp<TabParamList, 'Today'>;
 export const DailyView: React.FC = () => {
   const navigation = useNavigation<DailyViewNavigationProp>();
   const route = useRoute<DailyViewRouteProp>();
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(() => {
+    // Check if we have a selected date from navigation
+    if (route.params?.selectedDate) {
+      return new Date(route.params.selectedDate);
+    }
+    return new Date();
+  });
   const [entries, setEntries] = useState<DailyEntries>({});
   const { currentGradient, getGradientForTimeSlot } = useGradient();
 
@@ -159,6 +165,11 @@ export const DailyView: React.FC = () => {
             <Text style={styles.dateNumber}>
               {format(currentDate, 'MMMM d, yyyy')}
             </Text>
+            {format(currentDate, 'yyyy-MM-dd') !== format(new Date(), 'yyyy-MM-dd') && (
+              <TouchableOpacity onPress={() => setCurrentDate(new Date())}>
+                <Text style={styles.todayLink}>Go to Today</Text>
+              </TouchableOpacity>
+            )}
           </View>
           
           <TouchableOpacity onPress={() => navigateDate('next')}>
@@ -201,6 +212,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#fff',
     opacity: 0.8,
+  },
+  todayLink: {
+    fontSize: 12,
+    color: '#fff',
+    opacity: 0.8,
+    marginTop: 4,
+    textDecorationLine: 'underline',
   },
   scrollView: {
     flex: 1,

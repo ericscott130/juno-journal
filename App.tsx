@@ -32,6 +32,7 @@ export type TabParamList = {
       timeSlot: 'morning' | 'afternoon' | 'evening';
       slotIndex: number;
     };
+    selectedDate?: string; // YYYY-MM-DD format
   };
   Browse: undefined;
   Profile: undefined;
