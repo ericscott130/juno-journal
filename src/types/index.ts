@@ -16,6 +16,10 @@ export interface DailyEntries {
   [key: string]: MediaEntry;
 }
 
+export interface TimelineEntries {
+  [date: string]: MediaEntry[]; // date in YYYY-MM-DD format
+}
+
 export interface UserProfile {
   id: string;
   name: string;
@@ -39,4 +43,38 @@ export interface TimeSlotColors {
     start: string;
     end: string;
   };
+}
+
+export interface MediaItem {
+  id: string;
+  type: 'book' | 'movie' | 'tvshow' | 'podcast' | 'article' | 'video' | 'music' | 'other';
+  title: string;
+  status: 'want' | 'consuming' | 'finished';
+  author?: string;
+  url?: string;
+  coverImage?: string;
+  backgroundColor?: string;
+  notes?: string;
+  rating?: number;
+  tags?: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Idea {
+  id: string;
+  content: string;
+  category?: string;
+  tags?: string[];
+  relatedMedia?: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SmartCapture {
+  id: string;
+  rawText: string;
+  extractedMedia: MediaItem[];
+  extractedIdeas: Idea[];
+  createdAt: string;
 }

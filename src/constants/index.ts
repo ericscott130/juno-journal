@@ -20,7 +20,10 @@ export const GRADIENT_COLORS = {
 export const STORAGE_KEYS = {
   ENTRIES: '@juno_entries',
   USER_PROFILE: '@juno_profile',
-  SETTINGS: '@juno_settings'
+  SETTINGS: '@juno_settings',
+  MEDIA_ITEMS: '@juno_media',
+  IDEAS: '@juno_ideas',
+  SMART_CAPTURES: '@juno_captures'
 };
 
 export const COLORS = {

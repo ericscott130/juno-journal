@@ -1,15 +1,20 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
+import { View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { DailyView } from './src/screens/DailyView';
 import EntryCreation from './src/screens/EntryCreation';
 import { BrowseScreen } from './src/screens/BrowseScreen';
 import { ProfileScreen } from './src/screens/ProfileScreen';
+import { SmartCaptureScreen } from './src/screens/SmartCapture';
+import { MediaListScreen } from './src/screens/MediaList';
 import { MediaEntry } from './src/types';
 import { COLORS } from './src/constants';
+import { FloatingActionButton } from './src/components/FloatingActionButton';
 
 export type RootStackParamList = {
   MainTabs: {
@@ -22,6 +27,8 @@ export type RootStackParamList = {
     slotIndex: number;
     existingEntry?: MediaEntry;
   };
+  SmartCapture: undefined;
+  MediaList: undefined;
 };
 
 export type TabParamList = {
@@ -35,6 +42,7 @@ export type TabParamList = {
     selectedDate?: string; // YYYY-MM-DD format
   };
   Browse: undefined;
+  Media: undefined;
   Profile: undefined;
 };
 
@@ -42,6 +50,17 @@ const Stack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
 
 function TabNavigator() {
+  const navigation = useNavigation<any>();
+
+  const TabScreenWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    return (
+      <View style={{ flex: 1 }}>
+        {children}
+        <FloatingActionButton onPress={() => navigation.navigate('SmartCapture')} />
+      </View>
+    );
+  };
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -53,6 +72,8 @@ function TabNavigator() {
             iconName = focused ? 'today' : 'today-outline';
           } else if (route.name === 'Browse') {
             iconName = focused ? 'calendar' : 'calendar-outline';
+          } else if (route.name === 'Media') {
+            iconName = focused ? 'library' : 'library-outline';
           } else if (route.name === 'Profile') {
             iconName = focused ? 'person' : 'person-outline';
           } else {
@@ -76,19 +97,44 @@ function TabNavigator() {
     >
       <Tab.Screen 
         name="Today" 
-        component={DailyView}
         options={{ title: 'Today' }}
-      />
+      >
+        {(props) => (
+          <TabScreenWrapper>
+            <DailyView {...props} />
+          </TabScreenWrapper>
+        )}
+      </Tab.Screen>
       <Tab.Screen 
         name="Browse" 
-        component={BrowseScreen}
         options={{ title: 'Browse' }}
-      />
+      >
+        {(props) => (
+          <TabScreenWrapper>
+            <BrowseScreen {...props} />
+          </TabScreenWrapper>
+        )}
+      </Tab.Screen>
+      <Tab.Screen 
+        name="Media" 
+        options={{ title: 'Media' }}
+      >
+        {(props) => (
+          <TabScreenWrapper>
+            <MediaListScreen {...props} />
+          </TabScreenWrapper>
+        )}
+      </Tab.Screen>
       <Tab.Screen 
         name="Profile" 
-        component={ProfileScreen}
         options={{ title: 'Profile' }}
-      />
+      >
+        {(props) => (
+          <TabScreenWrapper>
+            <ProfileScreen {...props} />
+          </TabScreenWrapper>
+        )}
+      </Tab.Screen>
     </Tab.Navigator>
   );
 }
@@ -107,6 +153,15 @@ export default function App() {
           name="EntryCreation" 
           component={EntryCreation} 
           options={{ presentation: 'modal' }}
+        />
+        <Stack.Screen 
+          name="SmartCapture" 
+          component={SmartCaptureScreen} 
+          options={{ presentation: 'modal' }}
+        />
+        <Stack.Screen 
+          name="MediaList" 
+          component={MediaListScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>
